@@ -134,7 +134,7 @@ npm run dev                   # runs on http://localhost:3000
 
 ## Running Tests
 
-### Frontend
+### Frontend (Unit)
 
 ```bash
 cd rps-frontend
@@ -142,7 +142,7 @@ npm test                      # run all tests
 npm run test:coverage         # with coverage report
 ```
 
-### Backend
+### Backend (Unit)
 
 ```bash
 cd rps-backend
@@ -150,25 +150,68 @@ npm test                      # run all .spec.ts files
 npm run test:coverage
 ```
 
+### API Smoke Test
+
+```bash
+# Requires the stack to be running
+./scripts/test-api.sh                        # default: http://localhost:8080/api
+./scripts/test-api.sh http://your-host/api   # custom target
+```
+
+### E2E Tests (Playwright)
+
+```bash
+cd e2e
+npm install
+npx playwright install chromium
+npm test                      # headless against http://localhost:8080
+BASE_URL=http://your-host npm test
+npm run test:ui               # interactive UI mode
+npm run test:report           # open HTML report
+```
+
+---
+
+## Scaling the Backend
+
+Nginx is configured with an `upstream backend_pool` using `least_conn`. To run multiple backend instances:
+
+```bash
+docker compose up --build --scale backend=3
+```
+
+Docker's internal DNS resolves the `backend` service name to all replica IPs. Nginx distributes requests using least-connections policy.
+
 ---
 
 ## API Reference
 
+### Health / Monitor
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/health` | Returns database connectivity status |
+
+Response example:
+```json
+{ "status": "ok", "info": { "database": { "status": "up" } } }
+```
+
 ### Auth
 
-| Method | Endpoint | Body | Description |
-|---|---|---|---|
-| `POST` | `/auth/register` | `{ username, password }` | Create account → returns JWT |
-| `POST` | `/auth/login` | `{ username, password }` | Login → returns JWT |
-| `GET` | `/auth/me` | — (JWT header) | Get current user |
+| Method | Endpoint | Body | Rate limit | Description |
+|---|---|---|---|---|
+| `POST` | `/auth/register` | `{ username, password }` | 10 / min | Create account → returns JWT |
+| `POST` | `/auth/login` | `{ username, password }` | 10 / min | Login → returns JWT |
+| `GET` | `/auth/me` | — (JWT header) | 60 / min | Get current user |
 
 ### Game
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| `POST` | `/game/play` | Optional JWT | Send action → bot result + updated scores |
-| `POST` | `/game/reset` | Optional JWT | Reset your score to 0 |
-| `GET` | `/game/state` | Optional JWT | Get current yourScore + highScore |
+| Method | Endpoint | Auth | Rate limit | Description |
+|---|---|---|---|---|
+| `POST` | `/game/play` | Optional JWT | **20 / min** | Send action → bot result + updated scores |
+| `POST` | `/game/reset` | Optional JWT | 60 / min | Reset your score to 0 |
+| `GET` | `/game/state` | Optional JWT | 60 / min | Get current yourScore + highScore |
 
 ### Score
 
@@ -182,24 +225,30 @@ npm run test:coverage
 |---|---|---|---|
 | `score:updated` | Server → Client | `{ highScore: number }` | Emitted to all clients when high score is beaten |
 
-**Authentication:** Include `Authorization: Bearer <token>` header.  
+**Authentication:** Include `Authorization: Bearer <token>` header.
 **Guest mode:** No header needed — score tracked via `rps_your_score` cookie.
 
 ---
 
 ## Architecture Decisions
 
-**Why Optional JWT Guard on `/game/play`?**  
+**Why Optional JWT Guard on `/game/play`?**
 The game works for both logged-in users and guests. Instead of two separate endpoints, a single endpoint uses `OptionalJwtGuard` — authenticated users get DB-persisted scores, guests get cookie-based scores.
 
-**Why is bot randomness server-side?**  
+**Why is bot randomness server-side?**
 Per requirement: bot action must come from Backend API only (`Math.random()` lives in `game.service.ts`). The frontend never generates the bot action.
 
-**Why socket.io over raw WebSocket?**  
+**Why Rate Limiting?**
+`@nestjs/throttler` is applied globally (60 req/min) with stricter overrides on sensitive endpoints — `/game/play` at 20 req/min prevents score-spam abuse, and `/auth/register` + `/auth/login` at 10 req/min prevent brute-force attacks.
+
+**Why socket.io over raw WebSocket?**
 Auto-reconnect, room support, and simpler CORS handling. The gateway uses `@WebSocketGateway` decorator — NestJS handles the socket.io server lifecycle automatically alongside the HTTP server.
 
-**High Score strategy:**  
+**High Score strategy:**
 Each time a new high score is set, a row is inserted into `high_scores` (append-only log). `getHighScore()` queries `ORDER BY score DESC LIMIT 1`. This preserves score history without needing an UPDATE.
+
+**Why Nginx upstream with `least_conn`?**
+Enables horizontal scaling of the backend (`--scale backend=N`) without any code changes. Docker DNS resolves the service name to all replica IPs; `least_conn` ensures even request distribution under load.
 
 ---
 
@@ -217,7 +266,12 @@ Each time a new high score is set, a row is inserted into `high_scores` (append-
 | Bonus | Status |
 |---|---|
 | TypeScript (FE + BE) | ✅ |
+| SCSS / SASS | ✅ |
 | Docker + docker-compose | ✅ |
+| Load balancer (Nginx `least_conn` upstream + `--scale`) | ✅ |
+| Service monitor (`GET /health` via @nestjs/terminus) | ✅ |
+| API testing script (`scripts/test-api.sh`) | ✅ |
+| End-to-End Tests (Playwright — auth + gameplay) | ✅ |
 | Real-time High Score (WebSocket) | ✅ |
 | Login system | ✅ |
 | Unit tests (FE + BE) | ✅ |
