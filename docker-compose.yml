@@ -21,11 +21,11 @@ services:
       - rps_net
 
   # ── NestJS Backend ──────────────────────────────────────────────
+  # Scale horizontally: docker compose up --scale backend=3
   backend:
     build:
       context: ./rps-backend
       dockerfile: Dockerfile
-    container_name: rps_backend
     restart: unless-stopped
     depends_on:
       postgres:
