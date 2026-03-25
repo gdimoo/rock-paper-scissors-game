@@ -251,7 +251,7 @@ Each time a new high score is set, a row is inserted into `high_scores` (append-
 Enables horizontal scaling of the backend (`--scale backend=N`) without any code changes. Docker DNS resolves the service name to all replica IPs; `least_conn` ensures even request distribution under load.
 
 **Why no Kafka/RabbitMQ or Kubernetes?**
-Kafka/RabbitMQ and Kubernetes were considered but not added — the game's communication model is synchronous request/response with a single real-time channel (WebSocket), which does not justify the operational overhead of a message broker or container orchestrator at this scale.
+Kafka/RabbitMQ and Kubernetes were considered but not added — the game's communication model is synchronous request/response with a single real-time channel (WebSocket), which does not justify the operational overhead of a message broker or container orchestrator at this scale. These can be introduced incrementally as requirements grow: Kafka when async event processing is needed (e.g. leaderboards, match history, notifications), and Kubernetes when the deployment needs auto-scaling, rolling updates, or multi-region availability.
 
 ---
 
