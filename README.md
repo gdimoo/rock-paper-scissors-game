@@ -26,7 +26,7 @@ rps-game/
 │   │   ├── components/    # GameBoard, ScorePanel, BotDisplay, ActionButtons
 │   │   ├── hooks/         # useGame, useWebSocket
 │   │   ├── services/      # api.ts — all REST calls
-│   │   ├── styles/        # globals.scss (dark arcade theme)
+│   │   ├── styles/        # globals.scss, _tokens.scss (light theme)
 │   │   └── __tests__/     # Unit tests
 │   └── Dockerfile
 │
@@ -100,12 +100,12 @@ This starts:
 - `postgres` on internal network (port 5432)
 - `backend` (NestJS) on internal port 3001
 - `frontend` (Next.js) on internal port 3000
-- `nginx` on **http://localhost:80** ← open this in your browser
+- `nginx` on **http://localhost:8080** ← open this in your browser
 
 ### 4. Open the game
 
 ```
-http://localhost
+http://localhost:8080
 ```
 
 ---
@@ -125,7 +125,7 @@ npm run start:dev             # runs on http://localhost:3001
 
 ```bash
 cd rps-frontend
-cp .env.local.example .env.local
+cp .env.example .env.local
 npm install
 npm run dev                   # runs on http://localhost:3000
 ```
