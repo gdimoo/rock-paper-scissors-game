@@ -250,6 +250,9 @@ Each time a new high score is set, a row is inserted into `high_scores` (append-
 **Why Nginx upstream with `least_conn`?**
 Enables horizontal scaling of the backend (`--scale backend=N`) without any code changes. Docker DNS resolves the service name to all replica IPs; `least_conn` ensures even request distribution under load.
 
+**Why no Kafka/RabbitMQ or Kubernetes?**
+Kafka/RabbitMQ and Kubernetes were considered but not added — the game's communication model is synchronous request/response with a single real-time channel (WebSocket), which does not justify the operational overhead of a message broker or container orchestrator at this scale.
+
 ---
 
 ## Deployment Notes
