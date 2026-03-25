@@ -1,0 +1,30 @@
+# Env
+.env
+.env.local
+.env.*.local
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tsbuildinfo
+
+# Build outputs
+dist/
+.next/
+out/
+build/
+coverage/
+
+# Docker volumes (local dev)
+postgres_data/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+*.pem
