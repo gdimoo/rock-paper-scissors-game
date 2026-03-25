@@ -257,8 +257,7 @@ Kafka/RabbitMQ and Kubernetes were considered but not added — the game's commu
 
 ## Deployment Notes
 
-- The `synchronize: true` TypeORM option is enabled only in non-production environments — tables are auto-created on first run in development.
-- In production (`NODE_ENV=production`), run migrations manually instead.
+- `synchronize: true` is enabled — TypeORM auto-creates tables on first run. No manual migration needed for this project.
 - Change `JWT_SECRET` in `.env` before deploying — never use the default.
 - The frontend is built with `output: 'standalone'` in Next.js for minimal Docker image size.
 
