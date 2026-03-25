@@ -1,14 +1,24 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { AuthModule } from './auth/auth.module';
 import { GameModule } from './game/game.module';
 import { ScoreModule } from './score/score.module';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
     // Load .env globally
     ConfigModule.forRoot({ isGlobal: true }),
+
+    // Rate limiting — applied globally via APP_GUARD below
+    ThrottlerModule.forRoot([{
+      name: 'global',
+      ttl: 60_000,   // 60-second window
+      limit: 60,     // max 60 requests per IP per window
+    }]),
 
     // TypeORM — PostgreSQL
     TypeOrmModule.forRootAsync({
@@ -30,6 +40,11 @@ import { ScoreModule } from './score/score.module';
     AuthModule,
     GameModule,
     ScoreModule,
+    HealthModule,
+  ],
+  providers: [
+    // Enforce throttling on every endpoint
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
   ],
 })
 export class AppModule { }

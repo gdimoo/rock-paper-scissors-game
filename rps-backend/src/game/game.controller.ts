@@ -2,6 +2,7 @@ import {
   Controller, Post, Get, Body,
   UseGuards, Request, Res,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { Request as ExpressRequest, Response } from 'express';
 import { GameService } from './game.service';
 import { PlayDto } from './dto/play.dto';
@@ -17,6 +18,7 @@ export class GameController {
   constructor(private readonly gameService: GameService) {}
 
   /** Play a round — works for both authenticated users and guests */
+  @Throttle({ default: { ttl: 60_000, limit: 20 } })  // anti-spam: max 20 plays/min
   @UseGuards(OptionalJwtGuard)
   @Post('play')
   async play(
