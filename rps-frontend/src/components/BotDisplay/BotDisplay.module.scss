@@ -1,0 +1,104 @@
+@use '@/styles/tokens' as *;
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: $text-muted;
+  text-transform: uppercase;
+}
+
+.box {
+  width: 140px;
+  height: 140px;
+  border: 1.5px solid $border;
+  border-radius: 16px;
+  background: $bg-surface;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
+
+  @media (max-width: 480px) {
+    width: 110px;
+    height: 110px;
+  }
+
+  &.thinking {
+    border-color: $border;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -50%;
+      background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        rgba($accent, 0.1) 60deg,
+        transparent 120deg
+      );
+      animation: spin 1.2s linear infinite;
+    }
+  }
+
+  &.revealed {
+    border-color: $accent;
+    background: rgba($accent, 0.04);
+    box-shadow: 0 2px 10px rgba($accent, 0.12);
+  }
+}
+
+.mystery {
+  font-family: var(--font-inter, $font-display);
+  font-size: 40px;
+  font-weight: 700;
+  color: $text-muted;
+  z-index: 1;
+
+  @media (max-width: 480px) {
+    font-size: 32px;
+  }
+}
+
+.emoji {
+  font-size: 64px;
+  animation: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 1;
+
+  @media (max-width: 480px) {
+    font-size: 48px;
+  }
+}
+
+.result {
+  font-family: var(--font-inter, $font-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  height: 32px;
+  transition: color 0.3s;
+  color: transparent;
+
+  &.win   { color: $win;    }
+  &.lose  { color: $danger; }
+  &.draw  { color: $draw;   }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pop {
+  0%   { transform: scale(0.4) rotate(-10deg); opacity: 0; }
+  100% { transform: scale(1)   rotate(0deg);   opacity: 1; }
+}

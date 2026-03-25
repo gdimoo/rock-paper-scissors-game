@@ -1,0 +1,98 @@
+@use '@/styles/tokens' as *;
+
+.board {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 32px 24px 48px;
+  max-width: 560px;
+  margin: 0 auto;
+
+  @media (max-width: 480px) {
+    gap: 24px;
+    padding: 20px 16px 40px;
+  }
+}
+
+// ── Header ───────────────────────────────────────────────────────
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.title {
+  font-family: var(--font-inter, $font-display);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: $text-primary;
+
+  @media (max-width: 480px) {
+    font-size: 24px;
+  }
+}
+
+.slash {
+  color: $accent;
+  margin: 0 2px;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user {
+  font-size: 13px;
+  font-weight: 500;
+  color: $text-secondary;
+}
+
+.logoutBtn {
+  background: transparent;
+  border: 1px solid $border;
+  color: $text-secondary;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 6px;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+
+  &:hover {
+    border-color: $danger;
+    color: $danger;
+    background: rgba($danger, 0.06);
+  }
+}
+
+.loginLink {
+  font-size: 13px;
+  font-weight: 600;
+  color: $accent;
+  border: 1px solid $accent;
+  padding: 6px 14px;
+  border-radius: 6px;
+  transition: background 0.15s;
+
+  &:hover {
+    background: rgba($accent, 0.08);
+    text-decoration: none;
+  }
+}
+
+// ── Arena ─────────────────────────────────────────────────────────
+.arena {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  border-top: 1px solid $border;
+  border-bottom: 1px solid $border;
+}

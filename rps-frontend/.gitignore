@@ -1,0 +1,19 @@
+# Next.js
+.next/
+out/
+build/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Env
+.env*.local
+.env
+
+# Testing
+coverage/
+
+# Misc
+.DS_Store
+*.pem

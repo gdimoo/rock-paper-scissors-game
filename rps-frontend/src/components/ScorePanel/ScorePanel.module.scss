@@ -1,0 +1,106 @@
+@use '@/styles/tokens' as *;
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.scores {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  background: $bg-surface;
+  border: 1px solid $border;
+  border-radius: 12px;
+  padding: 24px 40px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+
+  @media (max-width: 480px) {
+    padding: 18px 24px;
+    gap: 20px;
+  }
+}
+
+.scoreBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: $text-muted;
+  text-transform: uppercase;
+}
+
+.value {
+  font-family: var(--font-inter, $font-display);
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 1;
+  color: $text-primary;
+  transition: color 0.2s, transform 0.15s;
+
+  @media (max-width: 480px) {
+    font-size: 40px;
+  }
+
+  &.bump {
+    animation: bump 0.3s ease-out;
+  }
+
+  &.high {
+    color: $accent;
+  }
+}
+
+.unit {
+  font-size: 11px;
+  font-weight: 500;
+  color: $text-muted;
+  text-transform: uppercase;
+}
+
+.divider {
+  width: 1px;
+  height: 60px;
+  background: $border;
+  flex-shrink: 0;
+}
+
+.resetBtn {
+  background: transparent;
+  border: 1px solid $border;
+  color: $text-secondary;
+  font-family: var(--font-inter, $font-body);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 20px;
+  border-radius: 8px;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+
+  &:hover {
+    border-color: $danger;
+    color: $danger;
+    background: rgba($danger, 0.06);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+@keyframes bump {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.18); color: $win; }
+  100% { transform: scale(1); }
+}

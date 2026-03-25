@@ -1,0 +1,110 @@
+@use '@/styles/tokens' as *;
+
+.row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: $text-muted;
+  text-transform: uppercase;
+  align-self: flex-start;
+}
+
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+
+  @media (max-width: 360px) {
+    gap: 8px;
+  }
+}
+
+.btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px 12px;
+  background: $bg-surface;
+  border: 1.5px solid $border;
+  border-radius: 12px;
+  color: $text-secondary;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition:
+    border-color 0.15s,
+    color 0.15s,
+    background 0.15s,
+    box-shadow 0.15s,
+    transform 0.12s;
+
+  &:hover:not(:disabled) {
+    border-color: $accent;
+    color: $accent;
+    background: rgba($accent, 0.04);
+    box-shadow: 0 2px 8px rgba($accent, 0.15);
+    transform: translateY(-2px);
+
+    .emoji { transform: scale(1.12); }
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0) scale(0.97);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  &.chosen {
+    border-color: $accent;
+    color: $accent;
+    background: rgba($accent, 0.06);
+    box-shadow: 0 2px 8px rgba($accent, 0.12);
+  }
+}
+
+.emoji {
+  font-size: 40px;
+  line-height: 1;
+  transition: transform 0.15s;
+
+  @media (max-width: 480px) {
+    font-size: 32px;
+  }
+}
+
+.name {
+  font-family: var(--font-inter, $font-display);
+  font-size: 15px;
+  font-weight: 600;
+  color: inherit;
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+  }
+}
+
+.lockMsg {
+  font-size: 12px;
+  font-weight: 500;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  animation: blink 1.2s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
