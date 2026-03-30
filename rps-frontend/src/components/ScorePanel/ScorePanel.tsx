@@ -7,9 +7,10 @@ interface ScorePanelProps {
   highScore: number;
   onReset: () => void;
   lastResult: 'WIN' | 'LOSE' | 'DRAW' | null;
+  isLocked?: boolean;
 }
 
-export function ScorePanel({ yourScore, highScore, onReset, lastResult }: ScorePanelProps) {
+export function ScorePanel({ yourScore, highScore, onReset, lastResult, isLocked }: ScorePanelProps) {
   return (
     <div className={styles.panel}>
       <div className={styles.scores}>
@@ -32,7 +33,7 @@ export function ScorePanel({ yourScore, highScore, onReset, lastResult }: ScoreP
         </div>
       </div>
 
-      <button className={styles.resetBtn} onClick={onReset} aria-label="Reset your score">
+      <button className={styles.resetBtn} onClick={onReset} disabled={isLocked} aria-label="Reset your score">
         RESET YOUR SCORE
       </button>
     </div>

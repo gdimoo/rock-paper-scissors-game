@@ -69,6 +69,7 @@ export function GameBoard({ isLoggedIn, username: usernameProp, onLogout }: Game
         highScore={state.highScore}
         onReset={resetScore}
         lastResult={state.lastResult}
+        isLocked={state.isLocked}
       />
 
       {/* Arena */}
