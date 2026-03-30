@@ -64,10 +64,15 @@
   border-radius: 6px;
   transition: border-color 0.15s, color 0.15s, background 0.15s;
 
-  &:hover {
+  &:hover:not(:disabled) {
     border-color: $danger;
     color: $danger;
     background: rgba($danger, 0.06);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
   }
 }
 
@@ -84,6 +89,12 @@
     background: rgba($accent, 0.08);
     text-decoration: none;
   }
+}
+
+.loginLinkDisabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 // ── Arena ─────────────────────────────────────────────────────────

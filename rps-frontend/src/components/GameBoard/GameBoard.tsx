@@ -53,12 +53,12 @@ export function GameBoard({ isLoggedIn, username: usernameProp, onLogout }: Game
             <span className={styles.user}>{username}</span>
           )}
           {isLoggedIn && (
-            <button className={styles.logoutBtn} onClick={handleLogout}>
+            <button className={styles.logoutBtn} onClick={handleLogout} disabled={state.isLocked}>
               LOGOUT
             </button>
           )}
           {!isLoggedIn && (
-            <a href="/login" className={styles.loginLink}>LOGIN</a>
+            <a href="/login" className={`${styles.loginLink} ${state.isLocked ? styles.loginLinkDisabled : ''}`} onClick={e => state.isLocked && e.preventDefault()}>LOGIN</a>
           )}
         </div>
       </header>
