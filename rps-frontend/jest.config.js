@@ -1,11 +1,11 @@
-import type { Config } from 'jest';
-import nextJest from 'next/jest.js';
+const nextJest = require('next/jest.js');
 
 const createJestConfig = nextJest({ dir: './' });
 
-const config: Config = {
+const config = {
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup.ts'],
+  testPathIgnorePatterns: ['/node_modules/', '<rootDir>/src/__tests__/setup.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '\\.module\\.(css|scss|sass)$': 'identity-obj-proxy',
@@ -26,4 +26,4 @@ const config: Config = {
   },
 };
 
-export default createJestConfig(config);
+module.exports = createJestConfig(config);
