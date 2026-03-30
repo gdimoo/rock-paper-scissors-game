@@ -32,7 +32,7 @@ test.describe('Authentication', () => {
     await page.getByLabel(/username/i).fill(username);
     await page.getByLabel(/password/i).fill('testpass123');
     await page.getByRole('button', { name: /create player/i }).click();
-    await page.waitForURL('/');
+    await page.waitForURL('/', { timeout: 10000 });
 
     // Try to register same username again
     await page.goto('/login');
@@ -41,7 +41,7 @@ test.describe('Authentication', () => {
     await page.getByLabel(/password/i).fill('testpass123');
     await page.getByRole('button', { name: /create player/i }).click();
 
-    await expect(page.getByRole('alert')).toContainText(/taken|already/i);
+    await expect(page.locator('p[role="alert"]')).toContainText(/taken|already/i);
   });
 
   test('shows error on wrong password', async ({ page }) => {
@@ -50,7 +50,7 @@ test.describe('Authentication', () => {
     await page.getByLabel(/password/i).fill('wrongpass');
     await page.getByRole('button', { name: /enter arena/i }).click();
 
-    await expect(page.getByRole('alert')).toBeVisible();
+    await expect(page.locator('p[role="alert"]')).toBeVisible();
   });
 
   test('logout clears session and shows login link', async ({ page }) => {
