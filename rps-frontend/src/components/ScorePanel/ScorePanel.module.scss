@@ -88,14 +88,19 @@
   border-radius: 8px;
   transition: border-color 0.2s, color 0.2s, background 0.2s;
 
-  &:hover {
+  &:hover:not(:disabled) {
     border-color: $danger;
     color: $danger;
     background: rgba($danger, 0.06);
   }
 
-  &:active {
+  &:active:not(:disabled) {
     transform: scale(0.97);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
   }
 }
 
